@@ -2348,3 +2348,106 @@ int main() {
     print(arr1, 10);
 }
 // We can convert this code for vectors also, but the logic is more important!
+
+// ---------------------------------------------------------- LECTURE 21 - LeetCode/CodeStudio Questions --------------------------------------------------------------------------------------------------------->
+// Question : Rotating an Array!
+// Approach : Suppose an array = {1,2,3,4} ab agar hume isko 2 place se rotate krna hai toh mtlb ki hume harr element ko do aage badha dena hai! so what we need to do is...jaise with the given example of the array...the resultant array will be, {3,4,1,2} this will be our rotated array! So ab hum ye cheez code me kaise kre..
+// We have studied about the modulus operator! so, jaise kisi bhi number ka modulus lete hai toh uske one's place ka digit mil jaata hai!
+// So what we will do is like, jaise array jo given hai ki {1,2,3,4} isme n=4 and jo elements ke index ki range is from 0-3 means 0-(n-1), so now, agar hume rotate krna hai array ko toh what we will do is, jaise 4 hai vo abhi n-1 index pr hai and agar vo do place aage jayega toh hypothetically vo n+1 pr aajayega, and when we will do the (n+1)%n we will get 1 and then we will place this 4 at index 1, similarly...
+// 3 abhi n-2 pr hai, and agar isko 2 place aage badhayenge toh ye n pr ajayega hypothetically but now when we will do the n%n we will get 0 so hum 3 ko 0th index pr daaldenge! and aise hum rotate krenge!
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int printVector(vector<int>& nums) {
+    cout<<"Vector after rotation : ";
+    for(int i:nums) {
+        cout<<i<<" ";
+    }
+}
+
+void rotate(vector<int>& nums, int k) {
+    vector<int> temp(nums.size());
+    for(int i = 0; i<nums.size(); i++) {
+        temp[(i+k)%nums.size()] = nums[i];
+    }
+    // copying temp into the num vector
+    nums = temp;
+    printVector(nums);
+}
+
+int main() {
+    int k;
+    cin>>k;
+    vector<int> v1;
+    v1.push_back(1);
+    v1.push_back(2);
+    v1.push_back(3);
+    v1.push_back(4);
+    v1.push_back(5);
+    cout<<"Vector before rotation : ";
+    for(int i : v1) {
+        cout<<i<<" ";
+    }
+    cout<<endl;
+    rotate(v1, k);
+}
+// Isme humne temp vaala array isliye create kiya kyunki uske bina krte toh nums me hi copy hote chale jaata array, if you want to understand this try a dry run, you will get it!
+
+// Question 2 : Check if an array is sorted and rotated or not!
+// We have done questions with similar logic previously you can go and learn from there!
+
+// Question 3 : Add 2 arrays!
+// Hum aise add krenge ki ek block of array me values sirf 0-9 hongi and carry next block me rakhenge! jaise ek normal addition hota hai!
+// Approach : Add hum humesha peeche se krte hai toh hum loop chalayenge peeche se! now it will contain 3 cases, first where like 1234 + 6 isme 4 and 6 toh add hojayenge and baaki sab bach jayenge, then one is 6 + 1234 isme bhi same cheez hogi bss in reverse way! then there is 1234 + 1234 isme same sab numbers add honge and in the end me ek carry bach jayega! and then vo bhi final sum me add hojayega!
+// Now how we will code it, pehli baat toh hum numbers ko add krenge and then unke sum ka ones place hum sum%10 se nikalenge then carry hum sum/10 se nikalenge! and then thats how we will code it! also considering all the 3 scenarios!
+#include<iostream>
+#include<vector>
+using namespace std;
+
+vector<int> reverse(vector<int> v) {
+    int s = 0;
+    int e = v.size()-1;
+    while(s<e) {
+        swap(v[s++], v[e--]);
+    }
+    return v;
+}
+
+vector<int> findArraySum(vector<int>& a, int n, vector<int>& b, int m) {
+    int i = n-1;
+    int j = m-1;
+    vector<int> ans;
+    int carry = 0;
+    while(i >= 0 || j >= 0 || carry != 0) {
+        int val1 = (i >= 0) ? a[i] : 0;
+        int val2 = (j >= 0) ? b[j] : 0;
+        int sum = val1 + val2 + carry;   
+        carry = sum / 10;
+        int onesPlace = sum % 10;
+        ans.push_back(onesPlace);
+        if (i >= 0) i--;
+        if (j >= 0) j--;
+    }
+    return reverse(ans);
+}
+
+int main() {
+    vector<int> v1;
+    v1.push_back(1);
+    v1.push_back(2);
+    v1.push_back(3);
+    v1.push_back(4);
+
+    vector<int> v2;
+    v2.push_back(5);
+    v2.push_back(5);
+    v2.push_back(5);
+
+    vector<int> result = findArraySum(v1, v1.size(), v2, v2.size());
+
+    // Print the result
+    for (int i = 0; i < result.size(); i++) {
+        cout << result[i];
+    }
+}
